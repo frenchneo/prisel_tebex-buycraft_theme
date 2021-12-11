@@ -1,0 +1,35 @@
+<div class="panel panel-default module" style="vertical-align:top;display:inline-block;width:calc(50% - 10px);margin-left:10px;">
+  <div class="panel-heading">{{ module.header }}</div>
+  <div class="panel-body">
+    <ul class="payments">
+      {% for payment in module.payments %}
+          <li>
+            <div class="avatar">
+              <img src="{{ payment.skin }}" width="28" />
+            </div>
+            <div class="info">
+              <div class="ign">
+                  {{ payment.ign }}
+                  {% if module.displayTime %}
+                      &bull; {{ payment.time }}
+                  {% endif %}
+              </div>
+              <div class="extra">
+                  {% if module.displayPackage %}
+                      {{ payment.name[:20] }}
+                  {% endif %}
+                  {% if module.displayPackage and module.displayPrice %}
+                      &bull;
+                  {% endif %}
+                  {% if module.displayPrice %}
+                      {{ payment.price|money }} <small>{{ payment.currency }}</small>
+                  {% endif %}
+              </div>
+            </div>
+          </li>
+      {% else %}
+          {{ __("Aucun paiement récent...") }}
+      {% endfor %}
+    </ul>
+  </div>
+</div>

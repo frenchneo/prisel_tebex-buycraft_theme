@@ -1,0 +1,81 @@
+{% extends "layout.html" %}
+
+{% block content %}
+	<div class="body">
+		<div class="content">
+			<div class="panel panel-default">
+				<div class="panel-heading">{{ options.package.name }}</div>
+				<div class="panel-body">
+				    <div class="variables">
+    					<form method="post">
+    
+    						{% if options.package.chooseServer %}
+    						    <div class="form-group">
+                                    <select class="form-control input-lg" name="server">
+                                        <option value="">{{ __("Please choose which server to receive this package upon") }}</option>
+                                        {% for server in options.servers %}
+    										<option value="{{ server.id }}">{{ server.name }}</option>
+    									{% endfor %}
+                                    </select>   
+                                </div>
+    						{% endif %}
+    
+    						{% if options.package.customPrice %}
+    							<div class="form-group">
+                                    <div class="input-group">
+                                      <input type="text" name="price" class="form-control input-lg" placeholder="{{ __("Merci d'entrer un montant supérieur à " ~ options.package.price ~ " " ~ store.currency ~ ".") }}">
+                                      <span class="input-group-addon"><small>{{ store.currency }}</small></span>
+                                    </div>
+                                </div>
+    						{% endif %}
+    
+    						{% for variable in options.variables %}
+								{% if variable.type == "dropdown" %}
+								     <div class="form-group">
+                                        <select name="variables[{{ variable.id }}]" class="form-control input-lg">
+                                            <option value="">{{ variable.description }}</option>
+    										{% for option in variable.options %}
+    											<option value="{{ option.id }}">
+    												{{ option.name }}
+    												{% if option.price > 0 %}
+    													(+{{ option.price|money }} {{ basket.currency }})
+    												{% endif %}
+    											</option>
+    										{% endfor %}
+                                        </select>   
+                                     </div> 
+                                 {% elseif variable.id == "discord_id" %}
+                                    <p>{{ variable.description }}</p>
+                                    
+                                    <div class="form-group">
+                                      <input type="text" class="form-control input-lg" readonly value="{{ variable.value ? "Logged in as " ~ variable.discord_tag : "Not logged in" }}">
+                                      <span class="input-group-append">
+                                          <a href="https://ident.tebex.io/discord/?return={{ url() }}" id="login-with-discord" class="btn btn-info">Login with Discord</a>
+                                      </span>
+                                    </div>
+                                    
+                                    <input type="hidden" name="variables[{{ variable.id }}]" value="{{ variable.value }}" />
+                                    <br />
+                                {% else %}
+								    <div class="form-group">
+                                          <input type="text" name="variables[{{ variable.id }}]" class="form-control input-lg" placeholder="{{ variable.description }}" />
+                                    </div>
+								{% endif %}
+    						{% endfor %}
+        
+                            <div class="buttons">
+                                <div class="back">
+                                  <a href="/category/{{ options.package.category }}" class="btn btn-block btn-danger">{{ __("Back") }}</a>
+                                </div>
+                                <div class="continue">
+                                  <input type="submit" value="{{ __("Continue") }}" name="submit" class="btn btn-block btn-success" />
+                                </div>
+                            </div>
+
+    					</form>
+    				</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

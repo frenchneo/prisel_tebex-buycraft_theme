@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="body">
+        <div class="content">
+            <div class="panel panel-default">
+                <div class="panel-heading">{{ __("Payment completed") }}</div>
+                <div class="panel-body">
+                    {{ thanks|raw }}
+                    <br>
+                    {{ delivery|raw }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

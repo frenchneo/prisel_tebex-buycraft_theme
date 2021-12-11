@@ -1,0 +1,36 @@
+<div class="panel panel-default module" style="vertical-align:top;display:inline-block;width:calc(50% - 10px);margin-right:10px;">
+    <div class="panel-heading">{{ module.header }}</div>
+    <div class="panel-body">
+        {% if module.donor %}
+          <div class="top-donator">
+              <div class="avatar">
+                <img src="{{ module.skin }}" width="40">
+              </div>
+              <div class="info">
+                <div class="ign bestdonator">{{ module.ign }}</div>
+                <div class="amount">
+                    {% if module.displayAmount %}
+                        {{ __("A donné") }} <bold>{{ module.total|money }} </bold> <small>{{ store.currency }}</small>
+                    {% else %}
+                        {{ __("Donated the most ") }}
+                    {% endif %}
+                    
+                    {% if module.period == "hourly" %}
+                        {{ __("cette heure.") }}
+                    {% elseif module.period == "daily" %}
+                        {{ __("aujourd'hui.") }}
+                    {% elseif module.period == "monthly" %}
+                        {{ __("ce mois.") }}
+                    {% elseif module.period == "yearly" %}
+                       {{ __("cette année.") }}
+                    {% else %}
+                        {{ __("cette semaine.") }}
+                    {% endif %}
+                </div>
+              </div>
+          </div>
+        {% else %}
+            {{ __("Aucun donateur récent...") }}
+        {% endif %}
+    </div>
+</div>

@@ -1,0 +1,74 @@
+{% extends "layout.html" %}
+
+{% block content %}
+        <div class="body row row-fluid">
+                <div class="content span8 col-md-8">
+                        <div class="panel panel-default box-container">
+                                <div class="panel-heading header">{{ __("Order Status") }}</div>
+                                <div class="panel-body content">
+                                        <p>
+                                                {{ __("To look up a payment, you must provide your Minecraft username, and one of: transaction ID, email address or the value of the purchase:") }}
+                                        </p>
+					<form action='?' method='post'>
+						<table class="table table-responsive">
+							<tr class="form-group">
+								<td><label>{{ __("Username") }}</label></td>
+								<td><input type="text" class="form-control" name="ign" value="{{ params.ign }}" /></td>
+							</tr>
+							<tr class="form-group">
+								<td><label>{{ __("Transaction ID") }}</label></td>
+								<td><input type="text" class="form-control" name="txn" value="{{ params.txn }}" /></td>
+							</tr>
+							<tr class="form-group">
+								<td><label>{{ __("Email Address") }}</label></td>
+								<td><input type="text" class="form-control" name="email" value="{{ params.email }}" /></td>
+							</tr>
+							<tr class="form-group">
+								<td><label>{{ __("Purchase Value") }}</label></td>
+								<td><input type="text" class="form-control" name="amount" value="{{ params.amount }}" /></td>
+							</tr>
+						</table>
+						<button type="submit" class="btn btn-success">{{ __("Search Payments") }}</button>
+					</form>
+
+					<hr />
+					{% if params %}
+						{% if payments|length > 0 %}
+						    <p>{{ _p("There is :payment_count matching payment",  payments|length, {"payment_count": payments|length}) }}</p>
+							{% for payment in payments %}
+				                                <table class="table table-hover table-striped well border">
+				                                    <thead>
+                                				        <tr>
+				                                            <td class="name" colspan="2"><strong>{{ payment.order_date|date("Y-m-d") }} - {{ payment.payment_status }}</strong></td>
+                                				        </tr>
+				                                    </thead>
+							        <tbody>
+                                				        <tr>
+				                                            <td>{{ __("Order Price:") }}</td>
+				                                            <td>{{ payment.currency }}{{ payment.price|number_format(2, ".", ",") }}</td>
+				                                        </tr>
+				                                        <tr>
+				                                            <td>{{ __("Commands Executed:") }}</td>
+				                                            <td>{{ payment.commands_executed }}</td>
+				                                        </tr>                               
+				                                        <tr>
+				                                            <td>{{ __("Commands Due:") }}</td>
+				                                            <td>{{ payment.commands_due }}</td>
+				                                        </tr>                                                                           
+				                                        <tr>
+				                                            <td>{{ __("Commands Scheduled:") }}</td>
+				                                            <td>{{ payment.commands_scheduled }}</td>
+				                                        </tr>                                            
+				                                    </tbody>
+							        </table>							
+							{% endfor %}
+						{% else %}
+							<p>{{ __("There are no payments matching these details") }}</p>
+						{% endif %}
+					{% endif %}
+                                </div>
+                        </div>
+                </div>
+        </div>
+{% endblock %}
+

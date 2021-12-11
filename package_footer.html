@@ -1,0 +1,46 @@
+<div class="modal-footer">
+    <div class="row">
+        <div class="col-sm-4">
+            <p class="pull-left">
+                {% if package.customPrice %}
+                    <b>{{ __("You decide how much to pay.") }}</b>
+                {% elseif package.price == 0.00 %}
+                    <b>{{ __("This item is free.") }}</b>
+                {% else %}
+                    <b>{{ package.price|money }} <small>{{ basket.currency }}</small></b>
+                {% endif %}
+            </p>
+        </div>
+        <div class="col-sm-8">
+            <div {% if package.purchasable == false %}data-toggle="tooltip" title="{{ package.reason }}"{% endif %} style="display: inline-block;" class="package-footer-buttons">
+                {% if package.basket %}
+                    <a href="/checkout/packages/remove/{{ package.id }}" class="btn btn-danger gift-weight">{{ __("Remove") }}</a>
+                {% else %}
+                    {% if package.type != "single" %}
+                        <a href="/checkout/packages/add/{{ package.id }}/subscribe" class="btn btn-success gift-weight" {% if package.purchasable == false %}disabled{% endif %}>{{ __("Subscribe") }}</a>
+                    {% endif %}
+{% if package.type != "subscription" %}
+                        <a href="/checkout/packages/add/{{ package.id }}/single" class="btn btn-success gift-weight" {% if package.purchasable == false %}disabled{% endif %}>{{ __("Add to cart") }}</a>
+                    {% endif %}
+                {% endif %}
+            </div>
+            {% if package.disable_gifting == false and package.storeGiftingEnabled %}
+                <btn class="btn gift-weight btn-gift {{ package.type != "single" and package.type != "subscription" ? "btn-gift-xl" }}">{{ __("Gift this package") }} <i class="fa fa-chevron-down" aria-hidden="true"></i></btn>
+            {% endif %}
+        </div>
+    </div>
+    {% if package.disable_gifting == false and package.storeGiftingEnabled %}
+    <div class="row gift-fields">
+        <form name="gift-form" method="get" action="/checkout/packages/add/{{ package.id }}/single/gift">
+            <div class="col-sm-12">
+                <div class="input-group">
+                    <input type="text" name="username" placeholder="{{ __("Enter a username to gift this package to") }}" class="form-control"/>
+                    <div class="input-group-btn">
+                        <button type="submit" class="btn btn-primary">Offrir</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    {% endif %}
+</div> 

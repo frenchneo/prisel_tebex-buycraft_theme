@@ -1,0 +1,25 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">{{ __("Player Referral") }}</h4>
+        </div>
+        <div class="modal-body">
+            <p>
+                {{ __("Please enter the username or ID of the player that referred you in the text field below.") }}
+        	</p>
+            <div class="input-group">
+                <div class="input-group-addon">
+                    <i class="fa fa-user" id="preferral-icon"></i>
+                </div>
+                <input type="text" class="form-control" id="preferral-username" name="username" placeholder="{{ __("Enter the ID of the player") }}" value="{{ username_id }}" />
+            </div>
+	    <p>{{ minSpend > 0 ? "The player must have spent more than " ~ minSpend ~ " " ~ basket.currency ~ " before they're eligble for referral rewards."}}</p>
+            <div id="preferral-message"></div>
+            
+            <div class="hide text-right" id="preferral-button">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">{{ __("Continue") }} &raquo;</button>
+            </div>
+        </div>
+    </div>
+</div>

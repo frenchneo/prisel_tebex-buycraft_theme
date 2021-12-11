@@ -1,0 +1,643 @@
+{% extends "layout.html" %}
+
+{% block content %}
+	<div class="body">
+	    {% if category.name == "GRADES À VIE" %}
+	    <center><div class="alerts alert-dangers">
+  <i class="fas fa-info-circle"></i> Les prix des grades sont dégressifs, c'est à dire que si vous achetez un grade le suivant sera moins cher.
+</div>
+</center>
+{% endif %}
+	    {% if category.name == "GRADES Á VIE" %}
+	    <center><div class="alerts alert-dangers">
+  <i class="fas fa-info-circle"></i> Les prix des grades sont dégressifs, c'est à dire que si vous achetez un grade le suivant sera moins cher.
+</div>
+</center>
+{% endif %}
+{% if category.name == "PACKS ÉPHÉMÈRES" %}
+	    <center><div class="alerts alert-dangers">
+  <i class="fas fa-clock
+  "></i> Ici vous trouverez tous les drops de pack limité, profitez d'exclusivités limité sur notre serveur !
+</div>
+<h2 style="color: white;">Nom de Code : Gargantua</h2>
+<br>
+        						<iframe width="800" height="400" src="https://www.youtube.com/embed/IQm0l4knHXQ" frameborder="0" allow="" allowfullscreen></iframe>
+        						<h3 style="color: white;">Limité à <span style="color: green">1</span> utilisation !<br>Pour acheter ce pack veuillez contacter <strong>Billal#0202</strong> sur Discord !</h3></center>
+{% endif %}
+		<div>
+			{% if category.description != "" %}
+				<div class="panel panel-default">
+					<div class="panel-heading">{{ category.name }}</div>
+					<div class="panel-body">
+						{{ category.description|raw }}
+					</div>
+				</div>
+			{% endif %}
+			{% if category.name == "PACKS ÉPHÉMÈRES" %}
+						<div class="paneleph panel-default">
+				<div class="panel-body category">
+        						<div class="packages-image">
+        							{% for package in category.packages %}
+        							    <center><div class="package voiturepkg otherpkgg">
+                                            <div class="image">
+                                                    <img src="{{ package.image.url }}" class="toggle-tooltip {% if package.image.borderless %}img-rounded{% else %}img-thumbnail{% endif %}"  />
+                                            </div>
+                                        </div>
+                                        	<h3 class="priceguan" style="color: white;">299<small>{{ basket.currency }}</small></h3>
+                                        </center>
+        							{% endfor %}
+        						</div>
+        						{% else %}
+			<div class="panel panell panel-default">
+				<div class="panel-body">
+				    {% endif %}
+					{% if category.packages|length > 0 %}
+					    <div class="category">
+    						{% if category.displayType == "list" %}
+                                <div class="packages-row">
+                                    <table class="table table-hover table-striped">
+    							        <tbody>
+        									{% for package in category.packages %}
+        									    <tr>
+                                                  <td class="name">{{ package.name }} {% if package.countdownEnds %}<span class="text-danger">&nbsp;&nbsp;<i class="fa fa-clock-o"></i> <span class="countdown-to" data-countdown="{{ package.countdownEnds }}">{{ __("Ending Soon!") }}</span></span>{% endif %}</td>
+                                                  <td class="price">
+                                                    {% if package.customPrice == false and package.price > 0 %}
+        						                        {% if package.discount.applied %}
+        						                  		    <span class="discount">{{ package.discount.original|money }}</span>
+        						                  		{% endif %}
+        												{{ package.price|money }} <small>{{ basket.currency }}</small>
+        											{% endif %}
+                                                  </td>
+                                                  <td class="button">
+                                                    {% if package.basket %}
+        					                  			<a href="/checkout/packages/remove/{{ package.id }}" class="btn btn-sm btn-danger btn-block">{{ __("Remove") }}</a>
+        					                  		{% else %}
+        											    <a href="javascript::void(0);" data-remote="/package/{{ package.id }}" class="btn btn-sm btn-success btn-block toggle-modal">{{ __("Buy") }}</a>
+        											{% endif %}
+                                                  </td>
+                                                </tr>
+        									{% endfor %}
+    							        </tbody>
+    						        </table>
+    						    </div>
+    						{% else %}
+    						{% if category.name == "GRADES À VIE" %}
+    						    <div class="packagess-image packages-image">
+        							{% for package in category.packages %}
+        							    <div class="package">
+                                            <div class="image">
+                                                <a href="javascript:void(0);" data-remote="/package/{{ package.id }}" class="toggle-modal">
+                                                    <img src="{{ package.image.url }}" class="toggle-tooltip {% if package.image.borderless %}img-rounded{% else %}img-thumbnail{% endif %}" title="{{ __("Cliquez pour plus d'informations") }}" />
+                                                </a>
+                                            </div>
+                                            <div class="info">
+                                              <div class="text">
+                                                {% if package.name == "[VIP]" %}
+                                                <div style="color: #ffff00" class="name">{{ package.name[:20] }}
+                                                {% endif %}
+                                                {% if package.name == "[ÉLITE]" %}
+                                                <div style="color: #A500E7" class="name">{{ package.name[:20] }}
+                                                {% endif %}
+                                                {% if package.name == "[LÉGENDE]" %}
+                                                <div style="color: #62c230" class="name">{{ package.name[:20] }}
+                                                {% endif %}
+                                                {% if package.name == "[EMPEREUR]" %}
+                                                <div style="color: #66ccff" class="name">{{ package.name[:20] }}
+                                                {% endif %}
+                                                {% if not package.name == "[EMPEREUR]" %}
+                                                <div class="name">{{ package.name[:20] }}
+                                                {% endif %}
+                                                   {% if package.countdownEnds %}<br /><span class="text-danger"><i class="fa fa-clock-o"></i> <span class="countdown-to" data-countdown="{{ package.countdownEnds }}">{{ __("Ending Soon!") }}</span></span>{% endif %}
+                                                </div>
+                                                <div class="price">
+                                                    {% if package.customPrice == false and package.price > 0.00 %}
+        												{% if package.discount.applied %}
+        				                  					<span class="discount">{{ package.discount.original|money }}</span>
+        				                  				{% endif %}
+        												{{ package.price|money }} <small>{{ basket.currency }}</small>
+        											{% endif %}
+                                                </div>
+                                              </div>
+                                            </div>
+                                            <div class="button">
+                                                {% if package.basket %}
+        		                  					<a href="/checkout/packages/remove/{{ package.id }}" class="btn btn-sm btn-danger btn-block">{{ __("Remove") }}</a>
+        		                  				{% else %}
+        											<a href="javascript::void(0);" data-remote="/package/{{ package.id }}" class="btn btn-sm btn-success btn-block toggle-modal">{{ __("Buy") }}</a>
+        										{% endif %}
+                                              </div>
+                                        </div>
+        							{% endfor %}
+        						</div>
+        						{% else %}
+        						{% if category.name == "GRADES Á VIE" %}
+    						    <div class="packagess-image packages-image">
+        							{% for package in category.packages %}
+        							    <div class="package">
+                                            <div class="image">
+                                                <a href="javascript:void(0);" data-remote="/package/{{ package.id }}" class="toggle-modal">
+                                                    <img src="{{ package.image.url }}" class="toggle-tooltip {% if package.image.borderless %}img-rounded{% else %}img-thumbnail{% endif %}" title="{{ __("Cliquez pour plus d'informations") }}" />
+                                                </a>
+                                            </div>
+                                            <div class="info">
+                                              <div class="text">
+                                                {% if package.name == "[VIP]" %}
+                                                <div style="color: #ffff00" class="name">{{ package.name[:20] }}
+                                                {% endif %}
+                                                {% if package.name == "[ÉLITE]" %}
+                                                <div style="color: #A500E7" class="name">{{ package.name[:20] }}
+                                                {% endif %}
+                                                {% if package.name == "[LÉGENDE]" %}
+                                                <div style="color: #62c230" class="name">{{ package.name[:20] }}
+                                                {% endif %}
+                                                {% if package.name == "[EMPEREUR]" %}
+                                                <div style="color: #66ccff" class="name">{{ package.name[:20] }}
+                                                {% endif %}
+                                                {% if not package.name == "[EMPEREUR]" %}
+                                                <div class="name">{{ package.name[:20] }}
+                                                {% endif %}
+                                                   {% if package.countdownEnds %}<br /><span class="text-danger"><i class="fa fa-clock-o"></i> <span class="countdown-to" data-countdown="{{ package.countdownEnds }}">{{ __("Ending Soon!") }}</span></span>{% endif %}
+                                                </div>
+                                                <div class="price">
+                                                    {% if package.customPrice == false and package.price > 0.00 %}
+        												{% if package.discount.applied %}
+        				                  					<span class="discount">{{ package.discount.original|money }}</span>
+        				                  				{% endif %}
+        												{{ package.price|money }} <small>{{ basket.currency }}</small>
+        											{% endif %}
+                                                </div>
+                                              </div>
+                                            </div>
+                                            <div class="button">
+                                                {% if package.basket %}
+        		                  					<a href="/checkout/packages/remove/{{ package.id }}" class="btn btn-sm btn-danger btn-block">{{ __("Remove") }}</a>
+        		                  				{% else %}
+        											<a href="javascript::void(0);" data-remote="/package/{{ package.id }}" class="btn btn-sm btn-success btn-block toggle-modal">{{ __("Buy") }}</a>
+        										{% endif %}
+                                              </div>
+                                        </div>
+        							{% endfor %}
+        						</div>
+        						{% else %}
+        						{% if category.name == "VOITURES" %}
+        						<div class="packages-image">
+        							{% for package in category.packages %}
+        							    <div class="package voiturepkg otherpkg">
+                                            <div class="image">
+                                                <a href="javascript:void(0);" data-remote="/package/{{ package.id }}" class="toggle-modal">
+                                                    <img src="{{ package.image.url }}" class="toggle-tooltip {% if package.image.borderless %}img-rounded{% else %}img-thumbnail{% endif %}" title="{{ __("Cliquez pour plus d'informations") }}" />
+                                                </a>
+                                            </div>
+                                            <div class="info">
+                                              <div class="text">
+                                                <div class="name">{{ package.name[:20] }}
+                                                   {% if package.countdownEnds %}<br /><span class="text-danger"><i class="fa fa-clock-o"></i> <span class="countdown-to" data-countdown="{{ package.countdownEnds }}">{{ __("Ending Soon!") }}</span></span>{% endif %}
+                                                </div>
+                                                <div class="price">
+                                                    {% if package.customPrice == false and package.price > 0 %}
+        												{% if package.discount.applied %}
+        				                  					<span class="discount">{{ package.discount.original|money }}</span>
+        				                  				{% endif %}
+        												{{ package.price|money }} <small>{{ basket.currency }}</small>
+        											{% endif %}
+                                                </div>
+                                              </div>
+                                            </div>
+                                            <div class="button">
+                                                {% if package.basket %}
+        		                  					<a href="/checkout/packages/remove/{{ package.id }}" class="btn btn-sm btn-danger btn-block">{{ __("Remove") }}</a>
+        		                  				{% else %}
+        											<a href="javascript::void(0);" data-remote="/package/{{ package.id }}" class="btn btn-sm btn-success btn-block toggle-modal">{{ __("Buy") }}</a>
+        										{% endif %}
+                                              </div>
+                                        </div>
+        							{% endfor %}
+        						</div>
+        						{% else %}
+        						{% if category.name == "PACKS" %}
+        						<div class="packages-image">
+        							{% for package in category.packages %}
+        							    <div class="package voiturepkg otherpkg">
+                                            <div class="image">
+                                                <a href="javascript:void(0);" data-remote="/package/{{ package.id }}" class="toggle-modal">
+                                                    <img src="{{ package.image.url }}" class="toggle-tooltip {% if package.image.borderless %}img-rounded{% else %}img-thumbnail{% endif %}" title="{{ __("Cliquez pour plus d'informations") }}" />
+                                                </a>
+                                            </div>
+                                            <div class="info">
+                                              <div class="text">
+                                                <div class="name">{{ package.name[:20] }}
+                                                   {% if package.countdownEnds %}<br /><span class="text-danger"><i class="fa fa-clock-o"></i> <span class="countdown-to" data-countdown="{{ package.countdownEnds }}">{{ __("Ending Soon!") }}</span></span>{% endif %}
+                                                </div>
+                                                <div class="price">
+                                                    {% if package.customPrice == false and package.price > 0 %}
+        												{% if package.discount.applied %}
+        				                  					<span class="discount">{{ package.discount.original|money }}</span>
+        				                  				{% endif %}
+        												{{ package.price|money }} <small>{{ basket.currency }}</small>
+        											{% endif %}
+        											{% if package.customPrice == false and package.price == 0 %}
+        												GRATUIT
+        											{% endif %}
+                                                </div>
+                                              </div>
+                                            </div>
+                                            <div class="button">
+                                                {% if package.basket %}
+        		                  					<a href="/checkout/packages/remove/{{ package.id }}" class="btn btn-sm btn-danger btn-block">{{ __("Remove") }}</a>
+        		                  				{% else %}
+        											<a href="javascript::void(0);" data-remote="/package/{{ package.id }}" class="btn btn-sm btn-success btn-block toggle-modal">{{ __("Buy") }}</a>
+        										{% endif %}
+                                              </div>
+                                        </div>
+        							{% endfor %}
+        						</div>
+        						{% else %}
+        						{% if category.name == "ARMES" %}
+        						<div class="packages-image">
+        							{% for package in category.packages %}
+        							    <div class="package voiturepkg otherpkg">
+                                            <div class="image">
+                                                <a href="javascript:void(0);" data-remote="/package/{{ package.id }}" class="toggle-modal">
+                                                    <img src="{{ package.image.url }}" class="toggle-tooltip {% if package.image.borderless %}img-rounded{% else %}img-thumbnail{% endif %}" title="{{ __("Cliquez pour plus d'informations") }}" />
+                                                </a>
+                                            </div>
+                                            <div class="info">
+                                              <div class="text">
+                                                <div class="name">{{ package.name[:20] }}
+                                                   {% if package.countdownEnds %}<br /><span class="text-danger"><i class="fa fa-clock-o"></i> <span class="countdown-to" data-countdown="{{ package.countdownEnds }}">{{ __("Ending Soon!") }}</span></span>{% endif %}
+                                                </div>
+                                                <div class="price">
+                                                    {% if package.customPrice == false and package.price > 0 %}
+        												{% if package.discount.applied %}
+        				                  					<span class="discount">{{ package.discount.original|money }}</span>
+        				                  				{% endif %}
+        												{{ package.price|money }} <small>{{ basket.currency }}</small>
+        											{% endif %}
+                                                </div>
+                                              </div>
+                                            </div>
+                                            <div class="button">
+                                                {% if package.basket %}
+        		                  					<a href="/checkout/packages/remove/{{ package.id }}" class="btn btn-sm btn-danger btn-block">{{ __("Remove") }}</a>
+        		                  				{% else %}
+        											<a href="javascript::void(0);" data-remote="/package/{{ package.id }}" class="btn btn-sm btn-success btn-block toggle-modal">{{ __("Buy") }}</a>
+        										{% endif %}
+                                              </div>
+                                        </div>
+        							{% endfor %}
+        						</div>{% else %}
+        						{% if category.name == "JETONS" %}
+        						<div class="packages-image">
+        							{% for package in category.packages %}
+        							    <div class="package voiturepkg otherpkg">
+                                            <div class="image">
+                                                <a href="javascript:void(0);" data-remote="/package/{{ package.id }}" class="toggle-modal">
+                                                    <img src="{{ package.image.url }}" class="toggle-tooltip {% if package.image.borderless %}img-rounded{% else %}img-thumbnail{% endif %}" title="{{ __("Cliquez pour plus d'informations") }}" />
+                                                </a>
+                                            </div>
+                                            <div class="info">
+                                              <div class="text">
+                                                <div class="name">{{ package.name[:20] }}
+                                                   {% if package.countdownEnds %}<br /><span class="text-danger"><i class="fa fa-clock-o"></i> <span class="countdown-to" data-countdown="{{ package.countdownEnds }}">{{ __("Ending Soon!") }}</span></span>{% endif %}
+                                                </div>
+                                                <div class="price">
+                                                    {% if package.customPrice == false and package.price > 0 %}
+        												{% if package.discount.applied %}
+        				                  					<span class="discount">{{ package.discount.original|money }}</span>
+        				                  				{% endif %}
+        												{{ package.price|money }} <small>{{ basket.currency }}</small>
+        											{% endif %}
+                                                </div>
+                                              </div>
+                                            </div>
+                                            <div class="button">
+                                                {% if package.basket %}
+        		                  					<a href="/checkout/packages/remove/{{ package.id }}" class="btn btn-sm btn-danger btn-block">{{ __("Remove") }}</a>
+        		                  				{% else %}
+        											<a href="javascript::void(0);" data-remote="/package/{{ package.id }}" class="btn btn-sm btn-success btn-block toggle-modal">{{ __("Buy") }}</a>
+        										{% endif %}
+                                              </div>
+                                        </div>
+        							{% endfor %}
+        						</div>
+        						{% else %}
+        						{% if category.name == "PACKS ÉPHÉMÈRES" %}
+        						
+        						{% else %}
+        						<div class="packages-image">
+        							{% for package in category.packages %}
+        							    <div class="package otherpkg">
+                                            <div class="image">
+                                                <a href="javascript:void(0);" data-remote="/package/{{ package.id }}" class="toggle-modal">
+                                                    <img src="{{ package.image.url }}" class="toggle-tooltip {% if package.image.borderless %}img-rounded{% else %}img-thumbnail{% endif %}" title="{{ __("Cliquez pour plus d'informations") }}" />
+                                                </a>
+                                            </div>
+                                            <div class="info">
+                                              <div class="text">
+                                                <div class="name">{{ package.name[:20] }}
+                                                   {% if package.countdownEnds %}<br /><span class="text-danger"><i class="fa fa-clock-o"></i> <span class="countdown-to" data-countdown="{{ package.countdownEnds }}">{{ __("Ending Soon!") }}</span></span>{% endif %}
+                                                </div>
+                                                <div class="price">
+                                                    {% if package.customPrice == false and package.price > 0 %}
+        												{% if package.discount.applied %}
+        				                  					<span class="discount">{{ package.discount.original|money }}</span>
+        				                  				{% endif %}
+        												{{ package.price|money }} <small>{{ basket.currency }}</small>
+        											{% endif %}
+                                                </div>
+                                              </div>
+                                            </div>
+                                            <div class="button">
+                                                {% if package.basket %}
+        		                  					<a href="/checkout/packages/remove/{{ package.id }}" class="btn btn-sm btn-danger btn-block">{{ __("Remove") }}</a>
+        		                  				{% else %}
+        											<a href="javascript::void(0);" data-remote="/package/{{ package.id }}" class="btn btn-sm btn-success btn-block toggle-modal">{{ __("Buy") }}</a>
+        										{% endif %}
+                                              </div>
+                                        </div>
+        							{% endfor %}
+        						</div>
+        						{% endif %}
+        						{% endif %}
+        						{% endif %}
+        						{% endif %}
+        						{% endif %}
+        						{% endif %}
+        						{% endif %}
+        						{% if category.name == "GRADES Á VIE" %}
+        						<div class="tablepacks">
+        						<table class="liste listePack">
+            						<tbody><tr>
+            							<td><b style="color: #ffff00">[VIP]</b></td>
+            							<td><b style="color: #A500E7">[ÉLITE]</b></td>
+            							<td><b style="color: #62c230">[LÉGENDE]</b></td>
+            							<td><b style="color: #66ccff">[EMPEREUR]</b></td>
+            						</tr>
+            						
+            						<tr>
+            							<td>500 Jetons</td>
+            							<td>800 Jetons</td>
+            							<td>1500 Jetons</td>
+            							<td>2500 Jetons</td>
+            						</tr>
+            						
+            						<tr>
+            							<td>60 Props</td>
+            							<td>150 Props</td>
+            							<td>200 Props</td>
+            							<td>350 Props</td>
+            						</tr>
+            
+            						<tr>
+            							<td>2 000 000€</td>
+            							<td>4 000 000 €</td>
+            							<td>15 000 000 €</td>
+            							<td>35 000 000 €</td>
+            						</tr>
+            						
+            						<tr>
+            							<td>Salaire x2</td>
+            							<td>Salaire x3</td>
+            							<td>Salaire x5</td>
+            							<td>Salaire x10</td>
+            						</tr>
+            						
+            						<tr>
+            							<td>Vitesse x1.1</td>
+            							<td>Vitesse x1.2</td>
+            							<td>Vitesse x1.35</td>
+            							<td>Vitesse x1.5</td>
+            						</tr>
+            						
+            						<tr>
+            							<td>Accès Channel Donateur Discord</td>
+            							<td>Accès Channel Donateur Discord</td>
+            							<td>Accès Channel Donateur Discord</td>
+            							<td>Accès Channel Donateur Discord</td>
+            						</tr>
+            
+            						<tr>
+            							<td>Voitures Exclusives</td>
+            							<td>Voitures Exclusives</td>
+            							<td>Voitures Exclusives</td>
+            							<td>Accès à tous les véhicules</td>
+            						</tr>
+            
+            						<tr>
+            							<td>Printers <b style="color: #ffff00">[VIP]</b></td>
+            							<td>Printers <b style="color: #A500E7">[ÉLITE]</b></td>
+            							<td>Printers <b style="color: #62c230">[LÉGENDE]</b></td>
+            							<td>Printers <b style="color: #66ccff">[EMPEREUR]</b></td>
+            						</tr>
+            
+            						<tr>
+            							<td>KARAMBIT + DESERT EAGLE</td>
+            							<td>KARAMBIT + TEC 9</td>
+            							<td>KARAMBIT + ACR + DB</td>
+            							<td>KARAMBIT + ACR + DB + MINIGUN</td>
+            							
+            						</tr>
+            
+            						<tr>
+            							<td>Inventaire Amélioré</td>
+            							<td>Inventaire Amélioré</td>
+            							<td>Inventaire Amélioré</td>
+            							<td>Inventaire Amélioré</td>
+            						</tr>
+            						
+            						<tr>
+            							<td>Vote Kick</td>
+            							<td>Vote Kick</td>
+            							<td>Vote Kick</td>
+            							<td>Vote Kick</td>
+            						</tr>
+            
+            						<tr>
+            							<td>Slots Réservés</td>
+            							<td>Slots Réservés</td>            							
+            							<td>Slots Réservés</td>
+            							<td>Slots Réservés</td>            						
+            						</tr>
+            
+            						<tr>
+            							<td>Icône TAB</td>
+            							<td>Icône TAB</td>
+            							<td>Icône TAB</td>
+            							<td>Icône TAB</td>
+            						</tr>
+            						
+            						<tr>
+            							<td>+15 Niveaux</td>
+            							<td>+25 Niveaux</td>
+            							<td><b>+50 Niveaux</b></td>
+            							<td><b style="color: #66ccff">+100 Niveaux</b></td>
+            						</tr>
+            						
+            						<tr>
+            							<td></td>
+            							<td>✔️ Vote Ban</td>
+            							<td>✔️ Vote Ban</td>
+            							<td>✔️ Vote Ban</td>
+            						</tr>
+            						
+            						            
+            						<tr>
+            							<td></td>
+            							<td></td>
+            							<td>✔️ Préfix personnalisé</td>
+            							<td>✔️ Préfix personnalisé</td>
+            						</tr>
+            						
+            						<tr>
+            							<td></td>
+            							<td></td>
+            							<td>✔️ Advanced Duplicator</td>
+            							<td>✔️ Advanced Duplicator</td>
+            						</tr>
+            						
+            						<tr>
+            						    <td></td>
+            							<td></td>
+            							<td></td>
+            							<td><b data-content='$' style="color: #66ccff">Printer à jetons</b></td>
+            						</tr>
+            					
+            					    <tr>
+            						    <td></td>
+            							<td></td>
+            							<td></td>
+            							<td>✔️ <b  style="color: #66ccff">Montre Connectée</b> (touche G en jeu)</td>
+            						</tr>
+            						
+            						<tr>
+            						    <td></td>
+            							<td></td>
+            							<td></td>
+            							<td>✔️ <b  style="color: #66ccff">Munitions Illimitées</b></td>
+            						</tr>
+            					</tbody></table>
+            					</div>
+        						{% endif %}
+        						{% if category.name == "GRADES À VIE" %}
+        						<div class="tablepacks">
+        						<table class="liste listePack">
+            						<tbody><tr>
+            							<td><b style="color: #ffff00">[VIP]</b></td>
+            							<td><b style="color: #A500E7">[ÉLITE]</b></td>
+            							<td><b style="color: #62c230">[LÉGENDE]</b></td>
+            							<td><b style="color: #66ccff">[EMPEREUR]</b></td>
+            						</tr>
+            						
+            						<tr>
+            							<td>500 Jetons</td>
+            							<td>800 Jetons</td>
+            							<td>1500 Jetons</td>
+            							<td>2500 Jetons</td>
+            						</tr>
+            
+            						<tr>
+            							<td>1 000 000 €</td>
+            							<td>3 000 000 €</td>
+            							<td>10 000 000 €</td>
+            							<td>25 000 000 €</td>
+            						</tr>
+            						
+            						<tr>
+            							<td>Salaire x2</td>
+            							<td>Salaire x3</td>
+            							<td>Salaire x5</td>
+            							<td>Salaire x10</td>
+            						</tr>
+            						
+            						<tr>
+            							<td>Accès Channel Donateur Discord</td>
+            							<td>Accès Channel Donateur Discord</td>
+            							<td>Accès Channel Donateur Discord</td>
+            							<td>Accès Channel Donateur Discord</td>
+            						</tr>
+
+            						
+            
+            						<tr>
+            							<td>Inventaire Amélioré</td>
+            							<td>Inventaire Amélioré</td>
+            							<td>Inventaire Amélioré</td>
+            							<td>Inventaire Amélioré</td>
+            						</tr>
+            						
+            						<tr>
+            							<td>Vote Kick</td>
+            							<td>Vote Kick</td>
+            							<td>Vote Kick</td>
+            							<td>Vote Kick</td>
+            						</tr>
+            
+            						<tr>
+            							<td>Slots Réservés</td>
+            							<td>Slots Réservés</td>            							
+            							<td>Slots Réservés</td>
+            							<td>Slots Réservés</td>            						
+            						</tr>
+            
+            						<!--<tr>
+            							<td>Icône TAB</td>
+            							<td>Icône TAB</td>
+            							<td>Icône TAB</td>
+            							<td>Icône TAB</td>
+            						</tr>-->
+            						
+            						<tr>
+            							<td>Boost Niveaux x1.2</td>
+            							<td>Boost Niveaux x1.3</td>
+            							<td><b>Boost Niveaux x1.5</b></td>
+            							<td><b style="color: #66ccff">Boost Niveaux x2</b></td>
+            						</tr>
+            						
+            						<tr>
+            							<td>+5 Niveaux</td>
+            							<td>+15 Niveaux</td>
+            							<td><b>+25 Niveaux</b></td>
+            							<td><b style="color: #66ccff">+35 Niveaux</b></td>
+            						</tr>
+            						
+            						<tr>
+            							<td></td>
+            							<td>Poings</td>
+            							<td>Poings + Freerun</td>
+            							<td>Poings + Freerun + Machète</td>
+            						</tr>
+            						
+            						<tr>
+            							<td></td>
+            							<td>✔️ Vote Ban</td>
+            							<td>✔️ Vote Ban</td>
+            							<td>✔️ Vote Ban</td>
+            						</tr>
+            						
+            						            
+            						<tr>
+            							<td></td>
+            							<td></td>
+            							<td>✔️ Préfix personnalisé</td>
+            							<td>✔️ Préfix personnalisé</td>
+            						</tr>
+            						
+            						<!--<tr>
+            						    <td></td>
+            							<td></td>
+            							<td></td>
+            							<td>✔️ <b  style="color: #66ccff">Munitions Illimitées</b></td>
+            						</tr>-->
+            					</tbody></table>
+            					</div>
+        						{% endif %}
+    						{% endif %}
+    					</div>
+					{% else %}
+						<p class="nopack">{{ __("No packages to display in this category.") }}</p>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
